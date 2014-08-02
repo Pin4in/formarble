@@ -1,9 +1,4 @@
 angular.module('formarble/controls/card').run(['$templateCache', function($templateCache) {
-  $templateCache.put('bs-common/card-expiry.html',
-    '<div class="form-group"><label class="control-label col-sm-4" fm-control-label="" for=""></label><div class="col-sm-4"><div class="row"><div class="col-xs-6"><select class="form-control" ng-model="year" ng-options="y for y in _years"></select></div><div class="col-xs-6"><select class="form-control" ng-model="month" ng-options="m for m in _months"></select></div></div><p class="help-block" ng-if="$control.description">{{$control.description}}</p></div></div>');
-}]);
-
-angular.module('formarble/controls/card').run(['$templateCache', function($templateCache) {
-  $templateCache.put('bs-common/card-number.html',
-    '<div class="form-group" ng-class="{\'has-error\': $input.$dirty && $input.$invalid}"><label class="control-label col-sm-4" fm-control-label=""></label><div class="col-sm-8"><input class="form-control" type="text" fm-control-input="" fm-card-number-input=""><input class="form-control" type="text" fm-control-input="">{{$caret}}<p ng-if="$control.description" class="help-block">{{$control.description}}</p></div></div>');
+  $templateCache.put('bs-common/card.html',
+    '<div class="form-group"><label class="control-label col-sm-4" for="name">Name</label><div class="col-sm-8"><input id="name" class="form-control" type="text" ng-model="name"></div></div><div class="form-group"><label class="control-label col-sm-4" for="number">Card number</label><div class="col-sm-8"><input id="number" class="form-control" type="text" ng-model="number" fm-card-number-input=""></div></div><div class="form-group"><label class="control-label col-sm-4" for="year">Expiration</label><div class="col-sm-4"><div class="row"><div class="col-xs-6"><select id="year" class="form-control" ng-model="year" ng-options="y for y in card._years"></select></div><div class="col-xs-6"><select id="month" class="form-control" ng-model="month" ng-options="m for m in card._months"></select></div></div></div><label class="control-label col-sm-2" for="code">CVV</label><div class="col-sm-2"><input id="code" class="form-control" type="password" ng-minlength="3" ng-maxlength="4" ng-model="code"></div></div>');
 }]);

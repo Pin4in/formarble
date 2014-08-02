@@ -1,9 +1,64 @@
 "use strict";
 
 angular.module('formarble/controls/card', ['formarble'])
-    .directive('fmCardNumber', function (fm) {
+    .directive('fmCard', function (fm) {
+        var now = new Date();
+
+        function range(start, end, inclusive) {
+            var r = [], i;
+            end += inclusive ? 1 : 0;
+            for (i = start; i < end; i++) {
+                r.push(i);
+            }
+            return r;
+        }
+
+        function bind(scope, from, to) {
+            scope.$watch(from, function (value) {
+                fm.oset(scope, to, value)
+            });
+            scope.$watch(to, function (value) {
+                fm.oset(scope, from, value)
+            });
+        }
+
         return {
-            templateUrl: fm.urlResolver('card-number')
+            templateUrl: fm.urlResolver('card'),
+            controllerAs: 'card',
+            controller: function ($scope, $element) {
+                var ctrl = this;
+
+                var mLocalYear = 'year',
+                    mLocalMonth = 'month',
+                    mLocalNumber = 'number',
+                    mLocalName = 'name',
+                    mLocalCode = 'code';
+
+                var thisYear = now.getFullYear(),
+                    endYear = thisYear + 10,
+                    thisMonth = now.getMonth() + 1,
+                    monthsOfThisYear = range(thisMonth, 12, true),
+                    monthsOfOtherYear = range(1, 12, true);
+
+                this._years = range(thisYear, endYear, true);
+                this._months = monthsOfOtherYear;
+
+                $scope.$watch(mLocalYear, function (value) {
+                    if (value === thisYear) {
+                        ctrl._months = monthsOfThisYear;
+                        if ($scope.month < thisMonth) {
+                            $scope.month = thisMonth;
+                        }
+                    } else {
+                        ctrl._months = monthsOfOtherYear;
+                    }
+                });
+
+                angular.forEach([mLocalName, mLocalNumber, mLocalYear, mLocalMonth, mLocalCode], function(model){
+                    var origModel = ['$model', $scope.$control.properties[model]._path].join('.');
+                    bind($scope, origModel, model);
+                });
+            }
         }
     })
     .directive('fmCardNumberInput', function ($browser) {
@@ -169,57 +224,4 @@ angular.module('formarble/controls/card', ['formarble'])
                 });
             }
         }
-    })
-    .directive('fmCardExpiry', function (fm) {
-        var now = new Date();
-
-        function range(start, end, inclusive) {
-            var r = [], i;
-            end += inclusive ? 1 : 0;
-            for (i = start; i < end; i++) {
-                r.push(i);
-            }
-            return r;
-        }
-
-        function bind(scope, from, to) {
-            scope.$watch(from, function (value) {
-                fm.oset(scope, to, value)
-            });
-            scope.$watch(to, function (value) {
-                fm.oset(scope, from, value)
-            });
-        }
-
-        return {
-            templateUrl: fm.urlResolver('card-expiry'),
-            controller: function ($scope, $element) {
-                var mLocalYear = 'year',
-                    mLocalMonth = 'month',
-                    mOrigYear = ['$model', $scope.$control.properties.year._path].join('.'),
-                    mOrigMonth = ['$model', $scope.$control.properties.month._path].join('.');
-
-                var thisYear = now.getFullYear(),
-                    endYear = thisYear + 10,
-                    thisMonth = now.getMonth() + 1,
-                    monthsOfThisYear = range(thisMonth, 12, true),
-                    monthsOfOtherYear = range(1, 12, true);
-
-                $scope._years = range(thisYear, endYear, true);
-
-                $scope.$watch(mLocalYear, function (value) {
-                    if (value === thisYear) {
-                        $scope._months = monthsOfThisYear;
-                        if ($scope.month < thisMonth) {
-                            $scope.month = thisMonth;
-                        }
-                    } else {
-                        $scope._months = monthsOfOtherYear;
-                    }
-                });
-
-                bind($scope, mOrigYear, mLocalYear);
-                bind($scope, mOrigMonth, mLocalMonth);
-            }
-        }
-    })
+    });

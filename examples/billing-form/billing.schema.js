@@ -1,46 +1,46 @@
 "use strict";
 
 module.exports = {
-    title: 'How can we help?',
+    title: 'Your billing details',
 
     virtual: {
-        'expiry.year': { extend: 'expirationYear', hidden: false },
-        'expiry.month': { extend: 'expirationMonth', hidden: false }
+        'card.name': { extend: 'cardholderName', hidden: false },
+        'card.number': { extend: 'cardNumber', hidden: false },
+        'card.code': { extend: 'code', hidden: false },
+        'card.year': { extend: 'expirationYear', hidden: false },
+        'card.month': { extend: 'expirationMonth', hidden: false }
     },
 
     properties: {
+        card: {
+            display: {
+                name: 'fm-card'
+            }
+        },
+
         cardholderName: {
             type: 'string',
-            maxLength: 128
+            maxLength: 128,
+            hidden: true
         },
 
         cardNumber: {
             type: 'string',
-
-            display: {
-                name: 'fm-card-number'
-            }
+            hidden: true
         },
 
-        expiry: {
-            display: {
-                name: 'fm-card-expiry'
-            }
+        code: {
+            type: 'string',
+            hidden: true
         },
 
         expirationYear: {
             type: 'number',
-            minimum: 2014,
-            maximum: 2024,
-
             hidden: true
         },
 
         expirationMonth: {
             type: 'number',
-            minimum: 1,
-            maximum: 12,
-
             hidden: true
         },
 

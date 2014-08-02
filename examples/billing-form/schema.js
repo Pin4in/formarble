@@ -1,11 +1,23 @@
 window.schema = {
-   "title": "How can we help?",
+   "title": "Your billing details",
    "virtual": {
-      "expiry.year": {
+      "card.name": {
          "hidden": false,
          "__virtual": true
       },
-      "expiry.month": {
+      "card.number": {
+         "hidden": false,
+         "__virtual": true
+      },
+      "card.code": {
+         "hidden": false,
+         "__virtual": true
+      },
+      "card.year": {
+         "hidden": false,
+         "__virtual": true
+      },
+      "card.month": {
          "hidden": false,
          "__virtual": true
       }
@@ -19,86 +31,94 @@ window.schema = {
    "focus": "cardholderName",
    "mapping": {},
    "properties": {
-      "cardholderName": {
-         "type": "string",
-         "maxLength": 128,
-         "_id": "cardholderName",
-         "_path": "cardholderName",
-         "path": "cardholderName",
+      "card": {
          "display": {
-            "name": "fm-input",
-            "type": "text",
-            "maxlength": 128,
-            "required": true,
-            "autofocus": true
+            "name": "fm-card"
          },
-         "title": "Cardholder name",
-         "_order": 1001,
-         "level": 1
-      },
-      "cardNumber": {
-         "type": "string",
-         "display": {
-            "name": "fm-card-number",
-            "type": "text",
-            "required": true
-         },
-         "_id": "cardNumber",
-         "_path": "cardNumber",
-         "path": "cardNumber",
-         "title": "Card number",
-         "_order": 1002,
-         "level": 1
-      },
-      "expiry": {
-         "display": {
-            "name": "fm-card-expiry"
-         },
-         "_id": "expiry",
-         "_path": "expiry",
-         "path": "expiry",
+         "_id": "card",
+         "_path": "card",
+         "path": "card",
          "properties": {
+            "name": {
+               "type": "string",
+               "maxLength": 128,
+               "hidden": false,
+               "_id": "cardholderName",
+               "_path": "cardholderName",
+               "__virtual": true,
+               "path": "card.name",
+               "display": {
+                  "name": "fm-input",
+                  "type": "text",
+                  "maxlength": 128
+               },
+               "title": "Name",
+               "_order": 1002,
+               "level": 2
+            },
+            "number": {
+               "type": "string",
+               "hidden": false,
+               "_id": "cardNumber",
+               "_path": "cardNumber",
+               "__virtual": true,
+               "path": "card.number",
+               "display": {
+                  "name": "fm-input",
+                  "type": "text"
+               },
+               "title": "Number",
+               "_order": 1003,
+               "level": 2
+            },
+            "code": {
+               "type": "string",
+               "hidden": false,
+               "_id": "code",
+               "_path": "code",
+               "__virtual": true,
+               "path": "card.code",
+               "display": {
+                  "name": "fm-input",
+                  "type": "text"
+               },
+               "title": "Code",
+               "_order": 1004,
+               "level": 2
+            },
             "year": {
                "type": "number",
-               "minimum": 2014,
-               "maximum": 2024,
                "hidden": false,
                "_id": "expirationYear",
                "_path": "expirationYear",
                "__virtual": true,
-               "path": "expiry.year",
+               "path": "card.year",
                "display": {
                   "name": "fm-input",
-                  "type": "number",
-                  "max": 2024,
-                  "min": 2014
+                  "type": "number"
                },
                "title": "Year",
-               "_order": 1004,
+               "_order": 1005,
                "level": 2
             },
             "month": {
                "type": "number",
-               "minimum": 1,
-               "maximum": 12,
                "hidden": false,
                "_id": "expirationMonth",
                "_path": "expirationMonth",
                "__virtual": true,
-               "path": "expiry.month",
+               "path": "card.month",
                "display": {
                   "name": "fm-input",
-                  "type": "number",
-                  "max": 12,
-                  "min": 1
+                  "type": "number"
                },
                "title": "Month",
-               "_order": 1005,
+               "_order": 1006,
                "level": 2
             }
          },
-         "title": "Expiry",
-         "_order": 1003,
+         "title": "Card",
+         "_order": 1001,
          "level": 1
       },
       "country": {
@@ -144,7 +164,7 @@ window.schema = {
             ]
          },
          "title": "Country",
-         "_order": 1006,
+         "_order": 1007,
          "level": 1
       }
    },

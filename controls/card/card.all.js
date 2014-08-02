@@ -1,9 +1,64 @@
 "use strict";
 
 angular.module('formarble/controls/card', ['formarble'])
-    .directive('fmCardNumber', function (fm) {
+    .directive('fmCard', function (fm) {
+        var now = new Date();
+
+        function range(start, end, inclusive) {
+            var r = [], i;
+            end += inclusive ? 1 : 0;
+            for (i = start; i < end; i++) {
+                r.push(i);
+            }
+            return r;
+        }
+
+        function bind(scope, from, to) {
+            scope.$watch(from, function (value) {
+                fm.oset(scope, to, value)
+            });
+            scope.$watch(to, function (value) {
+                fm.oset(scope, from, value)
+            });
+        }
+
         return {
-            templateUrl: fm.urlResolver('card-number')
+            templateUrl: fm.urlResolver('card'),
+            controllerAs: 'card',
+            controller: function ($scope, $element) {
+                var ctrl = this;
+
+                var mLocalYear = 'year',
+                    mLocalMonth = 'month',
+                    mLocalNumber = 'number',
+                    mLocalName = 'name',
+                    mLocalCode = 'code';
+
+                var thisYear = now.getFullYear(),
+                    endYear = thisYear + 10,
+                    thisMonth = now.getMonth() + 1,
+                    monthsOfThisYear = range(thisMonth, 12, true),
+                    monthsOfOtherYear = range(1, 12, true);
+
+                this._years = range(thisYear, endYear, true);
+                this._months = monthsOfOtherYear;
+
+                $scope.$watch(mLocalYear, function (value) {
+                    if (value === thisYear) {
+                        ctrl._months = monthsOfThisYear;
+                        if ($scope.month < thisMonth) {
+                            $scope.month = thisMonth;
+                        }
+                    } else {
+                        ctrl._months = monthsOfOtherYear;
+                    }
+                });
+
+                angular.forEach([mLocalName, mLocalNumber, mLocalYear, mLocalMonth, mLocalCode], function(model){
+                    var origModel = ['$model', $scope.$control.properties[model]._path].join('.');
+                    bind($scope, origModel, model);
+                });
+            }
         }
     })
     .directive('fmCardNumberInput', function ($browser) {
@@ -169,66 +224,8 @@ angular.module('formarble/controls/card', ['formarble'])
                 });
             }
         }
-    })
-    .directive('fmCardExpiry', function (fm) {
-        var now = new Date();
-
-        function range(start, end, inclusive) {
-            var r = [], i;
-            end += inclusive ? 1 : 0;
-            for (i = start; i < end; i++) {
-                r.push(i);
-            }
-            return r;
-        }
-
-        function bind(scope, from, to) {
-            scope.$watch(from, function (value) {
-                fm.oset(scope, to, value)
-            });
-            scope.$watch(to, function (value) {
-                fm.oset(scope, from, value)
-            });
-        }
-
-        return {
-            templateUrl: fm.urlResolver('card-expiry'),
-            controller: function ($scope, $element) {
-                var mLocalYear = 'year',
-                    mLocalMonth = 'month',
-                    mOrigYear = ['$model', $scope.$control.properties.year._path].join('.'),
-                    mOrigMonth = ['$model', $scope.$control.properties.month._path].join('.');
-
-                var thisYear = now.getFullYear(),
-                    endYear = thisYear + 10,
-                    thisMonth = now.getMonth() + 1,
-                    monthsOfThisYear = range(thisMonth, 12, true),
-                    monthsOfOtherYear = range(1, 12, true);
-
-                $scope._years = range(thisYear, endYear, true);
-
-                $scope.$watch(mLocalYear, function (value) {
-                    if (value === thisYear) {
-                        $scope._months = monthsOfThisYear;
-                        if ($scope.month < thisMonth) {
-                            $scope.month = thisMonth;
-                        }
-                    } else {
-                        $scope._months = monthsOfOtherYear;
-                    }
-                });
-
-                bind($scope, mOrigYear, mLocalYear);
-                bind($scope, mOrigMonth, mLocalMonth);
-            }
-        }
-    })
+    });
 angular.module('formarble/controls/card').run(['$templateCache', function($templateCache) {
-  $templateCache.put('bs-common/card-expiry.html',
-    '<div class="form-group"><label class="control-label col-sm-4" fm-control-label="" for=""></label><div class="col-sm-4"><div class="row"><div class="col-xs-6"><select class="form-control" ng-model="year" ng-options="y for y in _years"></select></div><div class="col-xs-6"><select class="form-control" ng-model="month" ng-options="m for m in _months"></select></div></div><p class="help-block" ng-if="$control.description">{{$control.description}}</p></div></div>');
-}]);
-
-angular.module('formarble/controls/card').run(['$templateCache', function($templateCache) {
-  $templateCache.put('bs-common/card-number.html',
-    '<div class="form-group" ng-class="{\'has-error\': $input.$dirty && $input.$invalid}"><label class="control-label col-sm-4" fm-control-label=""></label><div class="col-sm-8"><input class="form-control" type="text" fm-control-input="" fm-card-number-input=""><input class="form-control" type="text" fm-control-input="">{{$caret}}<p ng-if="$control.description" class="help-block">{{$control.description}}</p></div></div>');
+  $templateCache.put('bs-common/card.html',
+    '<div class="form-group"><label class="control-label col-sm-4" for="name">Name</label><div class="col-sm-8"><input id="name" class="form-control" type="text" ng-model="name"></div></div><div class="form-group"><label class="control-label col-sm-4" for="number">Card number</label><div class="col-sm-8"><input id="number" class="form-control" type="text" ng-model="number" fm-card-number-input=""></div></div><div class="form-group"><label class="control-label col-sm-4" for="year">Expiration</label><div class="col-sm-4"><div class="row"><div class="col-xs-6"><select id="year" class="form-control" ng-model="year" ng-options="y for y in card._years"></select></div><div class="col-xs-6"><select id="month" class="form-control" ng-model="month" ng-options="m for m in card._months"></select></div></div></div><label class="control-label col-sm-2" for="code">CVV</label><div class="col-sm-2"><input id="code" class="form-control" type="password" ng-minlength="3" ng-maxlength="4" ng-model="code"></div></div>');
 }]);
