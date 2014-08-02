@@ -1,0 +1,15 @@
+<div class="form-group">
+    <label class="control-label col-sm-4" fm-control-label for=""></label>
+
+    <div class="col-sm-4">
+        <div class="row">
+            <div class="col-xs-6">
+                <select class="form-control" ng-model="year" ng-options="y for y in _years"></select>
+            </div>
+            <div class="col-xs-6">
+                <select class="form-control" ng-model="month" ng-options="m for m in _months"></select>
+            </div>
+        </div>
+        <p class="help-block" ng-if="$control.description">{{$control.description}}</p>
+    </div>
+</div>

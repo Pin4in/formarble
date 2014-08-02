@@ -177,6 +177,15 @@ function resolveDisplay(schema) {
         inputDefaultValue;
 
     switch (schema.type) {
+        case 'time':
+        case 'date':
+        case 'datetime':
+        case 'datetime-local':
+        case 'month':
+        case 'week':
+            input = { name: 'fm-input', type: schema.type };
+            break;
+
         case 'boolean':
             input = { name: 'fm-checkbox'};
             inputDefaultValue = false;
@@ -331,11 +340,6 @@ exports.create = function (schema) {
 
     //walk through schema and collect nodes with original path
     walkSchema(schema, function (src, id, path, parent) {
-        //don't process hidden properties
-        if(schemaGetInherited(schema, [path, 'hidden'])) {
-            return;
-        }
-
         //clone source node without children
         var prop = _(src).omit('properties').cloneDeep();
 
@@ -397,6 +401,10 @@ exports.create = function (schema) {
         })
         .each(function (path) {
             var node = nodes[path];
+
+            if(node.hidden) {
+                return;
+            }
 
             node.path = mapString(root.mapping, path);
 

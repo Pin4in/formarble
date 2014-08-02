@@ -1,0 +1,4 @@
+{
+    "watch": ["examples/billing-form", "controls/card/card.js", "controls/card/templates"],
+    "ext": "js,html"
+}

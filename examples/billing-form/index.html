@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formarble example</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+    <!--<script src="bower_components/jquery/dist/jquery.js"></script>-->
+    <!--<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>-->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="../../formarble.js"></script>
+    <script src="../../controls/simple/simple.all.js"></script>
+    <script src="../../controls/card/card.js"></script>
+    <script src="../../controls/card/card.templates.js"></script>
+    <script src="schema.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-app="FormarbleExample">
+<div class="container">
+    <header>
+        <h1 class="text-muted">Formarble example</h1>
+    </header>
+
+    <section>
+        <div>
+            <form name="form" class="form-horizontal" novalidate>
+                <div class="form-group">
+                    <h2 class="col-md-push-4 col-md-8">{{schema.title}}</h2>
+                </div>
+                <div fm-form="schema" fm-theme="bs-common" fm-model="model"></div>
+                <div class="form-group">
+                    <div class="col-sm-push-4 col-sm-8">
+                        <button class="btn btn-primary" ng-click="send()" ng-disabled="form.$invalid">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="row">
+        <div class="col-md-6">
+            Model:
+            <pre>{{model | json}}</pre>
+        </div>
+        <div class="col-md-6">
+            Filtered:
+            <pre>{{modelFiltered | json}}</pre>
+        </div>
+    </section>
+</div>
+</body>
+
+<!--<script id="bs/group" type="text/ng-template">
+    <h2>Group: {{$control.$model}}</h2>
+    <div ng-repeat="c in ::$subControls" fm-control="c"></div>
+</script>
+<script id="bs/control-label" type="text/ng-template">
+    {{ $control.title}}
+    <a class="control-help" ng-if="::$control.display.hint" title="{{$control.display.hint}}">
+        <i class="glyphicon glyphicon-info-sign"></i>
+    </a>
+</script>
+<script id="bs/textarea" type="text/ng-template">
+    <div class="form-group" ng-class="{'has-error': $input.$dirty && $input.$invalid}">
+        <label class="control-label col-sm-4" fm-control-label>
+        {{ $control.title || $control.path}}
+        </label>
+
+        <div class="col-sm-8">
+            <textarea class="form-control" fm-control-input/>
+
+            <p class="help-block">{{ $control.description}}</p>
+        </div>
+    </div>
+</script>
+<script id="bs/input" type="text/ng-template">
+    <div class="form-group" ng-class="{'has-error': $input.$dirty && $input.$invalid}">
+        <label class="control-label col-sm-4" fm-control-label></label>
+
+        <div class="col-sm-8">
+            <input class="form-control" fm-control-input/>
+
+            <p class="help-block">{{ $control.description}}</p>
+        </div>
+    </div>
+</script>
+<script id="bs/checkbox" type="text/ng-template">
+    <div class="form-group">
+        <label class="control-label col-sm-4" fm-control-label></label>
+
+        <div class="col-sm-8">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" fm-control-input> {{ $control.description}}
+                </label>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="bs/radiolist" type="text/ng-template">
+    <div class="form-group">
+        <label class="control-label col-sm-4" fm-control-label for></label>
+
+        <div class="col-sm-8">
+            <div class="radio" ng-class="{'radio-inline': $control.display.inline}"
+                 ng-repeat="li in $control.display.options">
+                <label>
+                    <input type="radio" fm-control-input ng-value="li.id"/> {{
+                    li.title}}
+                </label>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="bs/select" type="text/ng-template">
+    <div class="form-group">
+        <label class="control-label col-sm-4" fm-control-label></label>
+
+        <div class="col-sm-8">
+            <select class="form-control" fm-control-input></select>
+        </div>
+    </div>
+</script>-->
+</html>
