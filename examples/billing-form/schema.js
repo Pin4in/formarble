@@ -35,6 +35,12 @@ window.schema = {
          "display": {
             "name": "fm-card"
          },
+         "required": [
+            "name",
+            "number",
+            "year",
+            "month"
+         ],
          "_id": "card",
          "_path": "card",
          "path": "card",
@@ -50,7 +56,8 @@ window.schema = {
                "display": {
                   "name": "fm-input",
                   "type": "text",
-                  "maxlength": 128
+                  "maxlength": 128,
+                  "required": true
                },
                "title": "Name",
                "_order": 1002,
@@ -65,7 +72,8 @@ window.schema = {
                "path": "card.number",
                "display": {
                   "name": "fm-input",
-                  "type": "text"
+                  "type": "text",
+                  "required": true
                },
                "title": "Number",
                "_order": 1003,
@@ -95,7 +103,8 @@ window.schema = {
                "path": "card.year",
                "display": {
                   "name": "fm-input",
-                  "type": "number"
+                  "type": "number",
+                  "required": true
                },
                "title": "Year",
                "_order": 1005,
@@ -110,7 +119,8 @@ window.schema = {
                "path": "card.month",
                "display": {
                   "name": "fm-input",
-                  "type": "number"
+                  "type": "number",
+                  "required": true
                },
                "title": "Month",
                "_order": 1006,

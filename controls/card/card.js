@@ -4,6 +4,13 @@ angular.module('formarble/controls/card', ['formarble'])
     .directive('fmCard', function (fm) {
         var now = new Date();
 
+        function uuid(){
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                return v.toString(16);
+            });
+        }
+
         function range(start, end, inclusive) {
             var r = [], i;
             end += inclusive ? 1 : 0;
@@ -54,14 +61,44 @@ angular.module('formarble/controls/card', ['formarble'])
                     }
                 });
 
+                this.name = $scope.$control.properties.name;
+                this.number = angular.extend({}, $scope.$control.properties.number, {display: {name:'fm-card-number'}});
+                this.year = $scope.$control.properties.year;
+                this.month = $scope.$control.properties.month;
+                this.code = $scope.$control.properties.code;
+
+
+//                this.expirationTitle = 'Date expires';
+
                 angular.forEach([mLocalName, mLocalNumber, mLocalYear, mLocalMonth, mLocalCode], function(model){
-                    var origModel = ['$model', $scope.$control.properties[model]._path].join('.');
-                    bind($scope, origModel, model);
+//                    var control = $scope.$control.properties[model];
+//                    var origModel = ['$model', control._path].join('.');
+//
+//                    ctrl[model] = control;
+
+//                    ctrl[model+'Title'] = control.title;
+//                    ctrl[model+'Id'] = uuid();
+
+//                    bind($scope, origModel, model);
                 });
             }
         }
     })
-    .directive('fmCardNumberInput', function ($browser) {
+    .directive('fmCardNumber', function (fm) {
+        return {
+            templateUrl: fm.urlResolver('card-number')
+        };
+    })
+    .directive('fmCardNumberInput', function (fm, $browser) {
+        function bind(scope, from, to) {
+                    scope.$watch(from, function (value) {
+                        fm.oset(scope, to, value)
+                    });
+                    scope.$watch(to, function (value) {
+                        fm.oset(scope, from, value)
+                    });
+                }
+
         function luhn(a, b, c, d, e) {
             for (d = +a[b = a.length - 1], e = 0; b--;)c = +a[b], d += ++e % 2 ? 2 * c % 10 + (c > 4) : c;
             return!(d % 10)
@@ -155,6 +192,13 @@ angular.module('formarble/controls/card', ['formarble'])
             }
         }
 
+        function isIgnoredKeyPressed(e) {
+            var key = e.keyCode;
+            return 46 == key//delete
+                || 8 == key//backspace
+                || 91 == key || (15 < key && key < 19) || (37 <= key && key <= 40);
+        }
+
         return {
             require: 'ngModel',
             link: function (scope, elem, attr, model) {
@@ -176,13 +220,10 @@ angular.module('formarble/controls/card', ['formarble'])
                     }
                 }
 
+                elem.attr('id', scope.$control.$id);
+
                 elem.bind('keyup', function(e){
-                    var key = event.keyCode
-                    // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
-                    // This lets us support copy and paste too
-                    if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40)){
-                        return;
-                    }
+                    if (isIgnoredKeyPressed(e)){ return; }
 
                     $browser.defer(listener);
                 });
@@ -222,6 +263,10 @@ angular.module('formarble/controls/card', ['formarble'])
                         return;
                     }
                 });
+
+                scope.$input = model;
+
+                bind(scope, 'number', ['$model', scope.$control._path].join('.'));
             }
         }
-    });
+    })

@@ -15,7 +15,8 @@ module.exports = {
         card: {
             display: {
                 name: 'fm-card'
-            }
+            },
+            required: ['name', 'number', 'year', 'month']
         },
 
         cardholderName: {
