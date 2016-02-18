@@ -17,6 +17,6 @@
     "angular": "~1.5",
     "lodash": "~2",
     "bootstrap": "~3",
-    "bootstrap4": "twbs/bootstrap#v4-dev"
+    "bootstrap4": "twbs/bootstrap#af68bc2c7312712fa6df9acc4fb5655168b55db8"
   }
 }
